@@ -1,0 +1,662 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>AI Study Nexus Pro - Advanced Learning Ecosystem</title> 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
+    <link rel="stylesheet" href="styles.css"> 
+</head> 
+<body> 
+    <div class="morphing-bg" id="morphingBg"></div> 
+    
+    <div class="container" id="main-content"> 
+        <div class="header"> 
+            <h1>Sched Friend</h1> 
+            <p class="subtitle">Advanced Learning Ecosystem which enhances the scheduling!!</p> 
+        </div> 
+        
+        <div class="user-selector"> 
+            <div class="user-card" data-user="add-user" onclick="addNewUser()"> 
+                <div class="user-avatar">+</div> 
+                <div>Add User</div> 
+            </div> 
+        </div> 
+        
+        <div class="agent-dashboard"> 
+            <div class="agent-card"> 
+                <div class="agent-header"> 
+                    <div class="agent-icon planner">🧠</div> 
+                    <div> 
+                        <h3>Planning Agent</h3> 
+                        <p id="planner-status">Analyzing study requirements...</p> 
+                    </div> 
+                    <div class="status-indicator status-active" id="planner-indicator"></div> 
+                </div> 
+                <div>Last Action: <span id="planner-action">Optimized learning pathways</span></div> 
+            </div> 
+            
+            <div class="agent-card"> 
+                <div class="agent-header"> 
+                    <div class="agent-icon executor">⚡</div> 
+                    <div> 
+                        <h3>Execution Agent</h3> 
+                        <p id="executor-status">Implementing adaptive schedules</p> 
+                    </div> 
+                    <div class="status-indicator status-idle" id="executor-indicator"></div> 
+                </div> 
+                <div>Last Action: <span id="executor-action">Created personalized study blocks</span></div> 
+            </div> 
+            
+            <div class="agent-card"> 
+                <div class="agent-header"> 
+                    <div class="agent-icon monitor">📊</div> 
+                    <div> 
+                        <h3>Monitor Agent</h3> 
+                        <p id="monitor-status">Real-time progress tracking</p> 
+                    </div> 
+                    <div class="status-indicator status-active" id="monitor-indicator"></div> 
+                </div> 
+                <div>Last Action: <span id="monitor-action">Updated learning analytics</span></div> 
+            </div> 
+            
+            <div class="agent-card"> 
+                <div class="agent-header"> 
+                    <div class="agent-icon rag">🔍</div> 
+                    <div> 
+                        <h3>RAG Assistant</h3> 
+                        <p id="rag-status">Knowledge base ready</p> 
+                    </div> 
+                    <div class="status-indicator status-active" id="rag-indicator"></div> 
+                </div> 
+                <div>Last Action: <span id="rag-action">Indexed new documents</span></div> 
+            </div> 
+            
+            <div class="agent-card"> 
+                <div class="agent-header"> 
+                    <div class="agent-icon file-processor">📄</div> 
+                    <div> 
+                        <h3>File Processor</h3> 
+                        <p id="file-status">Multi-format analysis ready</p> 
+                    </div> 
+                    <div class="status-indicator status-idle" id="file-indicator"></div> 
+                </div> 
+                <div>Last Action: <span id="file-action">Processed PDF content</span></div> 
+            </div> 
+            
+            <div class="agent-card"> 
+                <div class="agent-header"> 
+                    <div class="agent-icon chatbot">🤖</div> 
+                    <div> 
+                        <h3>AI Chatbot</h3> 
+                        <p id="chatbot-status">Ready to assist</p> 
+                    </div> 
+                    <div class="status-indicator status-active" id="chatbot-indicator"></div> 
+                </div> 
+                <div>Last Action: <span id="chatbot-action">Answered user query</span></div> 
+            </div> 
+        </div> 
+        
+        <div class="main-interface"> 
+            <div class="panel"> 
+                <h2 class="panel-title">Study Configuration</h2> 
+                <form id="studyForm"> 
+                    <div class="form-group"> 
+                        <label for="examDate">Target Exam Date:</label> 
+                        <input type="date" id="examDate" required> 
+                    </div> 
+                    
+                    <div class="form-group"> 
+                        <label for="subjectInput">Subjects:</label> 
+                        <div class="tag-input-container" id="subjectsContainer"> 
+                            <input type="text" id="subjectInput" placeholder="Type a subject and press Enter..."> 
+                        </div> 
+                        <input type="hidden" id="subjects" required> 
+                    </div> 
+                    
+                    <div class="form-group"> 
+                        <label>Daily Study Hours:</label> 
+                        <div class="custom-select-wrapper" data-hidden-input="studyHours"> 
+                            <div class="custom-select-trigger"> 
+                                <span> 
+                                    <span class="selected-value-title">4 hrs</span> 
+                                    <span class="selected-value-desc">Moderate</span> 
+                                </span> 
+                            </div> 
+                            <div class="custom-select-options"> 
+                                <div class="custom-select-option" data-value="2"> 
+                                    <span class="option-title">2 hrs</span> 
+                                    <span class="option-desc">Light</span> 
+                                </div> 
+                                <div class="custom-select-option selected" data-value="4"> 
+                                    <span class="option-title">4 hrs</span> 
+                                    <span class="option-desc">Moderate</span> 
+                                </div> 
+                                <div class="custom-select-option" data-value="6"> 
+                                    <span class="option-title">6 hrs</span> 
+                                    <span class="option-desc">Intensive</span> 
+                                </div> 
+                                <div class="custom-select-option" data-value="8"> 
+                                    <span class="option-title">8 hrs</span> 
+                                    <span class="option-desc">Maximum</span> 
+                                </div> 
+                            </div> 
+                        </div> 
+                        <input type="hidden" id="studyHours" value="4" required> 
+                    </div> 
+                    
+                    <div class="form-group"> 
+                        <label>Current Proficiency Level:</label> 
+                        <div class="custom-select-wrapper" data-hidden-input="difficulty"> 
+                            <div class="custom-select-trigger"> 
+                                <span> 
+                                    <span class="selected-value-title">Intermediate</span> 
+                                    <span class="selected-value-desc">Some experience</span> 
+                                </span> 
+                            </div> 
+                            <div class="custom-select-options"> 
+                                <div class="custom-select-option" data-value="beginner"> 
+                                    <span class="option-title">Beginner</span> 
+                                    <span class="option-desc">Starting fresh</span> 
+                                </div> 
+                                <div class="custom-select-option selected" data-value="intermediate"> 
+                                    <span class="option-title">Intermediate</span> 
+                                    <span class="option-desc">Some experience</span> 
+                                </div> 
+                                <div class="custom-select-option" data-value="advanced"> 
+                                    <span class="option-title">Advanced</span> 
+                                    <span class="option-desc">Strong foundation</span> 
+                                </div> 
+                            </div> 
+                        </div> 
+                        <input type="hidden" id="difficulty" value="intermediate" required> 
+                    </div> 
+                    
+                    <div class="form-group"> 
+                        <label for="studyGoals">Study Goals:</label> 
+                        <textarea id="studyGoals" rows="3" placeholder="Target score, topics to master, weak areas..."></textarea> 
+                    </div> 
+                    
+                    <!-- Learning Style Selection --> 
+                    <div class="form-group"> 
+                        <label>Preferred Learning Style:</label> 
+                        <div class="learning-styles"> 
+                            <div class="learning-style" data-style="visual"> 
+                                <i class="fas fa-eye"></i> 
+                                <span>Visual</span> 
+                            </div> 
+                            <div class="learning-style" data-style="auditory"> 
+                                <i class="fas fa-headphones"></i> 
+                                <span>Auditory</span> 
+                            </div> 
+                            <div class="learning-style" data-style="kinesthetic"> 
+                                <i class="fas fa-hand-paper"></i> 
+                                <span>Kinesthetic</span> 
+                            </div> 
+                            <div class="learning-style" data-style="reading"> 
+                                <i class="fas fa-book"></i> 
+                                <span>Reading/Writing</span> 
+                            </div> 
+                        </div> 
+                        <input type="hidden" id="learningStyle" value="visual"> 
+                    </div> 
+                    
+                    <!-- Study Preferences --> 
+                    <div class="form-group"> 
+                        <label>Study Preferences:</label> 
+                        <div class="study-preferences"> 
+                            <div class="preference-item"> 
+                                <input type="checkbox" id="morningPerson" name="studyTime" value="morning"> 
+                                <label for="morningPerson">Morning Person (6AM-12PM)</label> 
+                            </div> 
+                            <div class="preference-item"> 
+                                <input type="checkbox" id="afternoonPerson" name="studyTime" value="afternoon"> 
+                                <label for="afternoonPerson">Afternoon Person (12PM-6PM)</label> 
+                            </div> 
+                            <div class="preference-item"> 
+                                <input type="checkbox" id="eveningPerson" name="studyTime" value="evening"> 
+                                <label for="eveningPerson">Evening Person (6PM-12AM)</label> 
+                            </div> 
+                            <div class="preference-item"> 
+                                <input type="checkbox" id="nightPerson" name="studyTime" value="night"> 
+                                <label for="nightPerson">Night Person (12AM-6AM)</label> 
+                            </div> 
+                        </div> 
+                    </div> 
+                    
+                    <button type="submit" class="btn">Generate AI-Optimized Schedule</button> 
+                </form> 
+            </div> 
+            
+            <div class="panel schedule-panel"> 
+                <h2 class="panel-title">Personalized Schedule</h2> 
+                <div class="schedule-controls"> 
+                    <div class="schedule-filter"> 
+                        <button class="filter-btn active" data-filter="all">All Sessions</button> 
+                        <button class="filter-btn" data-filter="learning">Learning</button> 
+                        <button class="filter-btn" data-filter="practice">Practice</button> 
+                        <button class="filter-btn" data-filter="review">Review</button> 
+                    </div> 
+                    <div class="schedule-sort"> 
+                        <select id="sortSchedule"> 
+                            <option value="time">Sort by Time</option> 
+                            <option value="priority">Sort by Priority</option> 
+                            <option value="subject">Sort by Subject</option> 
+                        </select> 
+                    </div> 
+                </div> 
+                <div class="schedule-container" id="scheduleContainer"> 
+                    <div style="text-align: center; color: rgba(255,255,255,0.6); padding: 40px;"> 
+                        <div style="font-size: 3rem; margin-bottom: 20px;">📚</div> 
+                        <p>Configure your study parameters to generate an AI-optimized learning schedule</p> 
+                        <p style="margin-top: 10px; font-size: 0.9rem;">Upload study materials for enhanced personalization</p> 
+                    </div> 
+                </div> 
+            </div> 
+        </div> 
+        
+        <div class="calendar-view"> 
+            <h2 class="panel-title">Study Calendar</h2> 
+            <div class="calendar-header"> 
+                <h3 id="calendarMonth">June 2023</h3> 
+                <div class="calendar-nav"> 
+                    <button class="btn btn-small btn-secondary" onclick="previousMonth()"><i class="fas fa-chevron-left"></i></button> 
+                    <button class="btn btn-small btn-secondary" onclick="nextMonth()"><i class="fas fa-chevron-right"></i></button> 
+                </div> 
+            </div> 
+            <div class="calendar-grid" id="calendarGrid"> 
+                <!-- Calendar days will be generated here --> 
+            </div> 
+        </div> 
+        
+        <div class="files-section"> 
+            <h2 class="panel-title">Study Materials Hub</h2> 
+            
+            <div class="file-upload-area" id="fileUploadArea" onclick="document.getElementById('fileInput').click()"> 
+                <div style="font-size: 3rem; margin-bottom: 15px; color: rgba(255,255,255,0.6);">📁</div> 
+                <h3>Drop files here or click to upload</h3> 
+                <p style="margin-top: 10px; color: rgba(255,255,255,0.6);"> 
+                    Supports: PDF textbooks, Word documents, Images of notes, Text files 
+                </p> 
+                <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" style="display: none;"> 
+            </div> 
+            
+            <!-- File Organization Tabs --> 
+            <div class="file-tabs"> 
+                <div class="file-tab active" data-tab="all">All Files</div> 
+                <div class="file-tab" data-tab="pdf">PDFs</div> 
+                <div class="file-tab" data-tab="documents">Documents</div> 
+                <div class="file-tab" data-tab="images">Images</div> 
+                <div class="file-tab" data-tab="notes">Notes</div> 
+            </div> 
+            
+            <div class="files-grid" id="filesGrid"> 
+            </div> 
+        </div> 
+        
+        <div class="progress-section"> 
+            <h2 class="panel-title">Advanced Learning Analytics</h2> 
+            <div class="progress-grid"> 
+                <div class="progress-card"> 
+                    <span class="progress-number" id="completionRate">0%</span> 
+                    <div class="progress-label">Overall Completion</div> 
+                </div> 
+                <div class="progress-card"> 
+                    <span class="progress-number" id="studyStreak">0</span> 
+                    <div class="progress-label">Study Streak (days)</div> 
+                </div> 
+                <div class="progress-card"> 
+                    <span class="progress-number" id="totalHours">0h</span> 
+                    <div class="progress-label">Total Study Time</div> 
+                </div> 
+                <div class="progress-card"> 
+                    <span class="progress-number" id="daysLeft">--</span> 
+                    <div class="progress-label">Days Until Exam</div> 
+                </div> 
+            </div> 
+            
+            <!-- Subject Progress Breakdown --> 
+            <div class="subject-progress"> 
+                <h3>Subject Progress Breakdown</h3> 
+                <div id="subjectProgressContainer"> 
+                    <p style="text-align: center; color: rgba(255,255,255,0.6);">Generate a schedule to see subject progress</p> 
+                </div> 
+            </div> 
+            
+            <div class="chart-container"> 
+                <canvas id="progressChart"></canvas> 
+            </div> 
+        </div> 
+        
+        <div class="pomodoro-timer"> 
+            <h2 class="panel-title">Focus Timer</h2> 
+            <div class="timer-display" id="timerDisplay">25:00</div> 
+            <div class="timer-controls"> 
+                <button class="btn btn-success" id="startTimer">Start</button> 
+                <button class="btn btn-secondary" id="pauseTimer">Pause</button> 
+                <button class="btn" id="resetTimer">Reset</button> 
+            </div> 
+            <div style="margin-top: 20px;"> 
+                <label for="timerMinutes">Timer Duration (minutes):</label> 
+                <input type="number" id="timerMinutes" value="25" min="1" max="60" style="width: 80px; margin-left: 10px;"> 
+            </div> 
+            
+            <!-- Preset Timer Options --> 
+            <div class="timer-presets"> 
+                <button class="timer-preset" data-minutes="25">Pomodoro (25min)</button> 
+                <button class="timer-preset" data-minutes="15">Short (15min)</button> 
+                <button class="timer-preset" data-minutes="45">Long (45min)</button> 
+                <button class="timer-preset" data-minutes="60">Extended (60min)</button> 
+            </div> 
+        </div> 
+        
+        <div class="notes-section"> 
+            <h2 class="panel-title">Study Notes</h2> 
+            <div class="form-group"> 
+                <textarea id="noteInput" rows="3" placeholder="Add your study notes here..."></textarea> 
+                <button class="btn btn-small btn-success" style="margin-top: 10px; width: auto;" onclick="addNote()">Add Note</button> 
+            </div> 
+            
+            <!-- Notes Organization --> 
+            <div class="notes-filters"> 
+                <div class="notes-filter active" data-filter="all">All Notes</div> 
+                <div class="notes-filter" data-filter="today">Today</div> 
+                <div class="notes-filter" data-filter="week">This Week</div> 
+                <div class="notes-filter" data-filter="month">This Month</div> 
+            </div> 
+            
+            <div class="notes-list" id="notesList"> 
+                <!-- Notes will be displayed here --> 
+            </div> 
+        </div> 
+        
+        <div class="rag-section"> 
+            <h2 class="panel-title">Intelligent Knowledge Assistant</h2> 
+            <div class="rag-search"> 
+                <input type="text" id="ragQuery" placeholder="Ask about concepts, study techniques, or get personalized recommendations..."> 
+                <button class="btn btn-secondary btn-small" onclick="queryRAG()">Ask AI</button> 
+                <button class="btn btn-success btn-small" onclick="generateQuiz()">Generate Quiz</button> 
+            </div> 
+            
+            <!-- Knowledge Categories --> 
+            <div class="knowledge-categories"> 
+                <div class="category-card" data-category="study-techniques"> 
+                    <i class="fas fa-lightbulb"></i> 
+                    <h3>Study Techniques</h3> 
+                    <p>Effective learning strategies</p> 
+                </div> 
+                <div class="category-card" data-category="memory-improvement"> 
+                    <i class="fas fa-brain"></i> 
+                    <h3>Memory Improvement</h3> 
+                    <p>Enhance retention methods</p> 
+                </div> 
+                <div class="category-card" data-category="motivation"> 
+                    <i class="fas fa-fire"></i> 
+                    <h3>Motivation</h3> 
+                    <p>Stay focused and inspired</p> 
+                </div> 
+                <div class="category-card" data-category="exam-preparation"> 
+                    <i class="fas fa-graduation-cap"></i> 
+                    <h3>Exam Preparation</h3> 
+                    <p>Test-taking strategies</p> 
+                </div> 
+            </div> 
+            
+            <div id="ragResults"> 
+                <div class="knowledge-item"> 
+                    <strong>💡 Smart Tip:</strong> The Feynman Technique - Explain complex concepts in simple terms to identify knowledge gaps and deepen understanding. 
+                </div> 
+                <div class="knowledge-item"> 
+                    <strong>🧠 Memory Hack:</strong> Use spaced repetition with increasing intervals: review after 1 day, 3 days, 1 week, 2 weeks, and 1 month. 
+                </div> 
+            </div> 
+        </div> 
+        
+        <div class="ai-chat"> 
+            <h2 class="panel-title">AI Study Coach</h2> 
+            <div class="chat-messages" id="chatMessages"> 
+                <div class="chat-message ai"> 
+                    <strong>AI Coach:</strong> Welcome! I'm your personalized study assistant. How can I help you today? 
+                </div> 
+            </div> 
+            <div class="chat-input"> 
+                <input type="text" id="chatInput" placeholder="Ask me anything about studying, concepts, or motivation..."> 
+                <button class="btn btn-small" onclick="sendChatMessage()">Send</button> 
+            </div> 
+        </div> 
+        
+        <div class="export-section"> 
+            <h2 class="panel-title">Export Options</h2> 
+            <p style="margin-bottom: 20px;">Export your study schedule and progress data for offline use or sharing.</p> 
+            <div class="export-options"> 
+                <button class="btn btn-secondary" onclick="exportToPDF()"><i class="fas fa-file-pdf"></i> Export as PDF</button> 
+                <button class="btn btn-secondary" onclick="exportToCSV()"><i class="fas fa-file-csv"></i> Export as CSV</button> 
+                <button class="btn btn-purple" onclick="exportToJSON()"><i class="fas fa-file-code"></i> Export Data</button> 
+                <!-- Calendar Export --> 
+                <button class="btn btn-secondary" onclick="exportToCalendar()"><i class="fas fa-calendar-alt"></i> Export to Calendar</button> 
+            </div> 
+        </div> 
+        
+        <div class="settings-panel"> 
+            <h2 class="panel-title">Settings</h2> 
+            <div class="settings-grid"> 
+                <div class="setting-item"> 
+                    <div> 
+                        <h3>Dark Mode</h3> 
+                        <p>Toggle between light and dark themes</p> 
+                    </div> 
+                    <div class="toggle-switch active" id="darkModeToggle"> 
+                        <div class="toggle-slider"></div> 
+                    </div> 
+                </div> 
+                <div class="setting-item"> 
+                    <div> 
+                        <h3>Notifications</h3> 
+                        <p>Enable study session reminders</p> 
+                    </div> 
+                    <div class="toggle-switch" id="notificationsToggle"> 
+                        <div class="toggle-slider"></div> 
+                    </div> 
+                </div> 
+                <div class="setting-item"> 
+                    <div> 
+                        <h3>Focus Mode</h3> 
+                        <p>Minimize distractions during study sessions</p> 
+                    </div> 
+                    <div class="toggle-switch" id="focusModeToggle"> 
+                        <div class="toggle-slider"></div> 
+                    </div> 
+                </div> 
+                <div class="setting-item"> 
+                    <div> 
+                        <h3>Auto Save</h3> 
+                        <p>Automatically save your progress</p> 
+                    </div> 
+                    <div class="toggle-switch active" id="autoSaveToggle"> 
+                        <div class="toggle-slider"></div> 
+                    </div> 
+                </div> 
+                <!-- Advanced Settings --> 
+                <div class="setting-item"> 
+                    <div> 
+                        <h3>Smart Scheduling</h3> 
+                        <p>AI optimizes schedule based on performance</p> 
+                    </div> 
+                    <div class="toggle-switch active" id="smartSchedulingToggle"> 
+                        <div class="toggle-slider"></div> 
+                    </div> 
+                </div> 
+                <div class="setting-item"> 
+                    <div> 
+                        <h3>Adaptive Learning</h3> 
+                        <p>Adjust difficulty based on progress</p> 
+                    </div> 
+                    <div class="toggle-switch active" id="adaptiveLearningToggle"> 
+                        <div class="toggle-slider"></div> 
+                    </div> 
+                </div> 
+            </div> 
+        </div> 
+    </div> 
+    
+    <div class="modal" id="editModal"> 
+        <div class="modal-content"> 
+            <span class="close-btn" onclick="closeModal('editModal')">&times;</span> 
+            <h2>Edit Study Session</h2> 
+            <form id="editForm"> 
+                <div class="form-group"> 
+                    <label for="editTime">Time:</label> 
+                    <input type="time" id="editTime"> 
+                </div> 
+                <div class="form-group"> 
+                    <label for="editSubject">Subject:</label> 
+                    <input type="text" id="editSubject"> 
+                </div> 
+                <div class="form-group"> 
+                    <label for="editTopic">Topic:</label> 
+                    <input type="text" id="editTopic"> 
+                </div> 
+                <!-- Session Type Selection --> 
+                <div class="form-group"> 
+                    <label for="editSessionType">Session Type:</label> 
+                    <div class="custom-select-wrapper" data-hidden-input="editSessionType"> 
+                        <div class="custom-select-trigger"> 
+                            <span> 
+                                <span class="selected-value-title">Learning</span> 
+                            </span> 
+                        </div> 
+                        <div class="custom-select-options"> 
+                            <div class="custom-select-option selected" data-value="learning"> 
+                                <span class="option-title">Learning</span> 
+                            </div> 
+                            <div class="custom-select-option" data-value="practice"> 
+                                <span class="option-title">Practice</span> 
+                            </div> 
+                            <div class="custom-select-option" data-value="review"> 
+                                <span class="option-title">Review</span> 
+                            </div> 
+                        </div> 
+                    </div> 
+                    <input type="hidden" id="editSessionType" value="learning"> 
+                </div> 
+                <button type="submit" class="btn">Update Session</button> 
+            </form> 
+        </div> 
+    </div> 
+    
+    <div class="modal" id="fileModal"> 
+        <div class="modal-content"> 
+            <span class="close-btn" onclick="closeModal('fileModal')">&times;</span> 
+            <h2 id="fileModalTitle">File Analysis Results</h2> 
+            <div id="fileAnalysisContent"></div> 
+        </div> 
+    </div> 
+    
+    <div class="modal" id="quizModal"> 
+        <div class="modal-content"> 
+            <span class="close-btn" onclick="closeModal('quizModal')">&times;</span> 
+            <h2>AI Generated Quiz</h2> 
+            <div id="quizContent"></div> 
+            <div id="quizActions" style="margin-top: 20px;"></div> 
+        </div> 
+    </div> 
+    
+    <div class="modal" id="userModal"> 
+        <div class="modal-content"> 
+            <span class="close-btn" onclick="closeModal('userModal')">&times;</span> 
+            <h2>Add New User</h2> 
+            <form id="userForm"> 
+                <div class="form-group"> 
+                    <label for="userName">Name:</label> 
+                    <input type="text" id="userName" placeholder="Enter user name" required> 
+                </div> 
+                <div class="form-group"> 
+                    <label>Avatar Color:</label> 
+                    <div class="color-swatch-selector" id="userAvatarSelector"> 
+                    </div> 
+                    <input type="hidden" id="userAvatarColor" value="#667eea"> 
+                </div> 
+                <button type="submit" class="btn">Create User</button> 
+            </form> 
+        </div> 
+    </div> 
+    
+    <div class="modal" id="subjectMaterialModal"> 
+        <div class="modal-content"> 
+            <span class="close-btn" onclick="closeModal('subjectMaterialModal')">&times;</span> 
+            <h2>Upload Materials for <span id="subjectMaterialName"></span></h2> 
+            <div class="file-upload-area" id="subjectFileUploadArea" onclick="document.getElementById('subjectFileInput').click()"> 
+                <div style="font-size: 3rem; margin-bottom: 15px; color: rgba(255,255,255,0.6);">📁</div> 
+                <h3>Drop files here or click to upload</h3> 
+                <p style="margin-top: 10px; color: rgba(255,255,255,0.6);"> 
+                    Supports: PDF textbooks, Word documents, Images of notes, Text files 
+                </p> 
+                <input type="file" id="subjectFileInput" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" style="display: none;"> 
+            </div> 
+            <div id="subjectUploadedFiles"></div> 
+            <div class="subject-materials" id="subjectMaterialsList"></div> 
+            <button class="btn" style="margin-top: 20px;" onclick="closeSubjectMaterialModal()">Done</button> 
+        </div> 
+    </div> 
+    
+    <div class="modal" id="calendarDayModal"> 
+        <div class="modal-content"> 
+            <span class="close-btn" onclick="closeModal('calendarDayModal')">&times;</span> 
+            <h2>Study Notes for <span id="calendarDayDate"></span></h2> 
+            <div class="form-group"> 
+                <label for="calendarDayNote">Note:</label> 
+                <textarea id="calendarDayNote" rows="3" placeholder="Add your study notes for this day..."></textarea> 
+            </div> 
+            <div class="form-group"> 
+                <label>Attach PDF:</label> 
+                <div class="file-upload-area" id="calendarDayFileUploadArea" onclick="document.getElementById('calendarDayFileInput').click()"> 
+                    <div style="font-size: 2rem; margin-bottom: 10px; color: rgba(255,255,255,0.6);">📄</div> 
+                    <p>Click to upload PDF</p> 
+                    <input type="file" id="calendarDayFileInput" accept=".pdf" style="display: none;"> 
+                </div> 
+                <div id="calendarDayFileList"></div> 
+            </div> 
+            <button class="btn" style="margin-top: 20px;" onclick="saveCalendarDayNote()">Save Note</button> 
+        </div> 
+    </div> 
+    
+    <!-- Session Details Modal --> 
+    <div class="modal" id="sessionDetailsModal"> 
+        <div class="modal-content"> 
+            <span class="close-btn" onclick="closeModal('sessionDetailsModal')">&times;</span> 
+            <h2>Session Details</h2> 
+            <div id="sessionDetailsContent"></div> 
+            <div class="session-resources" id="sessionResources"> 
+                <h3>Recommended Resources</h3> 
+                <div id="sessionResourcesList"></div> 
+            </div> 
+            <button class="btn" style="margin-top: 20px;" onclick="closeModal('sessionDetailsModal')">Close</button> 
+        </div> 
+    </div> 
+    
+    <!-- Study Statistics Modal --> 
+    <div class="modal" id="statsModal"> 
+        <div class="modal-content"> 
+            <span class="close-btn" onclick="closeModal('statsModal')">&times;</span> 
+            <h2>Study Statistics</h2> 
+            <div class="stats-container"> 
+                <div class="stats-chart"> 
+                    <canvas id="statsChart"></canvas> 
+                </div> 
+                <div class="stats-summary"> 
+                    <h3>Performance Summary</h3> 
+                    <div id="statsSummaryContent"></div> 
+                </div> 
+            </div> 
+            <button class="btn" style="margin-top: 20px;" onclick="closeModal('statsModal')">Close</button> 
+        </div> 
+    </div> 
+    
+    <script src="script.js"></script> 
+</body> 
+</html>
