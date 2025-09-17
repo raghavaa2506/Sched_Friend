@@ -5,7 +5,7 @@
 "https://sched-friend-h995.vercel.app"
 
 # You can view the entire documentation of the website in the below attached pdf:
-"https://sched-friend.tiiny.site"
+"https://drive.google.com/drive/folders/1M-t4Vm3ZkPxAeY4Va55-bJfCHlF-uPub?usp=sharing"
 
 # The screenshots of the website goes like this:
 <img width="1904" height="912" alt="Screenshot 2025-09-17 133026" src="https://github.com/user-attachments/assets/cc60dff7-03a6-4b44-9a5c-c67f2fdc97bd" />
